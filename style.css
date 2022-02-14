@@ -28,3 +28,29 @@ text-align: center;
 .show {
     display: block;
 }
+
+p, a {
+    color: white;
+    text-shadow:
+        0.05em 0 black,
+        0 0.05em black,
+        -0.05em 0 black,
+        0 -0.05em black,
+        -0.05em -0.05em black,
+        -0.05em 0.05em black,
+        0.05em -0.05em black,
+        0.05em 0.05em black;
+}
+
+h2 {
+    text-shadow:
+        0.05em 0 white,
+        0 0.05em white,
+        -0.05em 0 white,
+        0 -0.05em white,
+        -0.05em -0.05em white,
+        -0.05em 0.05em white,
+        0.05em -0.05em white,
+        0.05em 0.05em white;
+
+}

@@ -33,12 +33,15 @@ function runSpeechRecognition() {
         var confidence = event.results[0][0].confidence;
 
         output.innerHTML = "<b>Text:</b> " + transcript + "<br/> <b>Confidence:</b> " + confidence * 100 + "%";
-       document.getElementById("jeremy").innerHTML = '<img src = "jeremy_speaking.png" id = "jeremy">'
+        document.getElementById("jeremy").innerHTML = '<img src = "jeremy_speaking.png" id = "jeremy">'
         output.classList.remove("hide");
-      document.getElementById("jeremy").innerHTML = '<img src = "jeremy_speaking.png" id = "jeremy">';
+        document.getElementById("jeremy").innerHTML = '<img src = "jeremy_speaking.png" id = "jeremy">';
 
-        fetch(`http://143.198.112.75:3001/ask?q=${transcript}`)
-            .then(response => response.json())
+        fetch(`https://comrade-jeremy.us:3443/ask?q=${transcript}`)
+            .then((response) => {
+                console.log(response);
+                return response.json()
+            })
             .then(
                 (data) => {
                     console.log(data);
