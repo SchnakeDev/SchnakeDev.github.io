@@ -4,7 +4,7 @@ function get() {
     let answer = document.getElementById('answer').value;
     
     console.log(intent, question, answer);
-    fetch(`http://143.198.112.75:3001/train?intent=${intent}&question=${question}&answer=${answer}`)
+    fetch(`https://comrade-jeremy.us:3443/train?intent=${intent}&question=${question}&answer=${answer}`)
     
     
 

@@ -9,13 +9,17 @@
     <p>Click on the button below to start speaking to Jeremy!</p>
     <p>(Нажмите на кнопку ниже, чтобы начать разговор с Джереми!)</p>
     <audio controls autoplay>
-    <source src = "soviet-anthem1944.mp3" type="audio/mpeg">
-    </audio>
-    <p><button type="button" onclick="runSpeechRecognition()">Talk</button> &nbsp; <span id="action"></span></p>
+        <source src = "soviet-anthem1944.mp3" type="audio/mpeg">
+        </audio>
+        <p><button type="button" onclick="runSpeechRecognition()">Talk</button> &nbsp; <span id="action"></span></p>
     <div id="output" class="hide"></div>
     <div id="jeremy">
         <img src="jeremy_not_speaking.png">
     </div>
+
+    <p>Try saying "Hello" or asking his favorite food!</p>
+    <p>This project uses NLP learning to classify the intent of questions</p>
+    <a href="https://github.com/SchnakeDev/SchnakeDev.github.io">Check out the GitHub! (github.com/SchnakeDev/SchnakeDev.github.io)</a>
 
     <script src="script.js"></script>
 </body>

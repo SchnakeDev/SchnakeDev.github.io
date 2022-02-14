@@ -3,32 +3,46 @@ const { NlpManager } = require("node-nlp");
 // Let's import fs module to read our json files.
 const fs = require("fs");
 
-// Require the framework and instantiate it
-const app = require('fastify')({
-    logger: true
-})
+// filename: app.js
+const https = require('https');
+const express = require('express');
+const app = express();
+
+// Set up express server here
+const options = {
+    cert: fs.readFileSync('../sslcert/fullchain.pem'),
+    key: fs.readFileSync('../sslcert/privkey.pem')
+};
 
 // Declare a route
 app.get('/', function (req, reply) {
     reply.send({ hello: 'world' })
 })
+app.get('/ask', answer);
+app.get('/do-training', train);
+app.get('/train', addQuestionToIntent);
 
-app.get('/ask', async function (req, reply) {
+app.listen(3000);
+https.createServer(options, app).listen(3443);
+
+async function answer(req, reply) {
     console.log("Starting Chatbot ...");
-
+    reply.header("Access-Control-Allow-Origin", "*");
+    reply.header("Access-Control-Allow-Methods", "GET");
     // Creating new Instance of NlpManager class.
     const manager = new NlpManager({ languages: ["en"] });
     // Loading our saved model
     manager.load();
     // Here Passing our input text to the manager to get response and display response answer.
     const response = await manager.process("en", req.query.q);
+    console.log(response)
     console.log(req.query)
-    return {
+    reply.send(JSON.stringify({
         answer: response.answer
-    };
-})
+    }));
+}
 
-app.get('/train', async function (req, reply) {
+async function train(req, reply) {
     // Creating new Instance of NlpManager class.
     const manager = new NlpManager({ languages: ["en"] });
     // Let's read all our intents files in the folder intents
@@ -55,13 +69,26 @@ app.get('/train', async function (req, reply) {
     return {
         training: "Complete"
     };
-});
+}
 
-// Run the server!
-app.listen(3001, '0.0.0.0', (err, address) => {
-    if (err) {
-        app.log.error(err)
-        process.exit(1)
+async function addQuestionToIntent(req, reply) {
+    const intent = req.query.intent;
+    const question = req.query.question;
+    const answer = req.query.answer;
+    let data = null;
+    try {
+        const file = fs.readFileSync(`./intents/${intent}.json`);
+        data = JSON.parse(file);
+        data.questions.push(question);
+        data.answers.push(answer);
     }
-    app.log.info(`server listening on ${address}`)
-})
+    catch (e) {
+        data = { questions: [], answers: [] };
+        data.questions.push(question);
+        data.answers.push(answer);
+    }
+    fs.writeFileSync(`./intents/${intent}.json`, JSON.stringify(data));
+    const training = await train(req, reply)
+    data.training = training.training;
+    reply.send(JSON.stringify(data));
+}
